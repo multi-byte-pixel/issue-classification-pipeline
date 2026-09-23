@@ -1,0 +1,6 @@
+region                   = "REPLACE_REGION"
+owner                    = "REPLACE_OWNER"
+model_id                 = "REPLACE_APPROVED_MODEL_ID"
+model_resource_arns       = ["arn:REPLACE_WITH_APPROVED_MODEL_RESOURCE"]
+artifact_bucket_name     = "REPLACE_UNIQUE_PRIVATE_ARTIFACT_BUCKET"
+permissions_boundary_arn = "arn:REPLACE_WITH_APPROVED_RUNTIME_BOUNDARY"

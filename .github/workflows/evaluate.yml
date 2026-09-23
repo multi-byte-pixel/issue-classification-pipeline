@@ -1,0 +1,80 @@
+name: Evaluate synthetic scenarios
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        options: [local, dev]
+        default: local
+        required: true
+      seed:
+        default: "42"
+        required: true
+      scenario_count:
+        default: "50"
+        required: true
+permissions:
+  contents: read
+jobs:
+  local:
+    if: inputs.target == 'local'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: "0.10.12"
+          python-version: "3.12"
+      - run: uv sync --frozen --extra dev
+      - run: uv run python -m evaluation.cli run --seed "$SEED" --scenario-count "$COUNT"
+        env:
+          SEED: ${{ inputs.seed }}
+          COUNT: ${{ inputs.scenario_count }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: local-evaluation
+          path: artifacts/evaluation/
+          retention-days: 14
+          if-no-files-found: error
+  dev:
+    if: inputs.target == 'dev' && github.ref == 'refs/heads/main' && vars.CLOUD_ENABLED == 'true'
+    environment: dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: "0.10.12"
+          python-version: "3.12"
+      - run: uv sync --frozen --extra dev
+      - uses: aws-actions/configure-aws-credentials@ff717079ee2060e4bcee96c4779b553acc87447c # v4
+        with:
+          role-to-assume: ${{ vars.AWS_EVAL_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - run: |
+          uv run python -m evaluation.cli run --seed "$SEED" --scenario-count "$COUNT" \
+            --target-url "$API_URL" --region "$AWS_REGION" --allow-cloud
+        env:
+          SEED: ${{ inputs.seed }}
+          COUNT: ${{ inputs.scenario_count }}
+          API_URL: ${{ vars.DEV_API_URL }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: dev-evaluation
+          path: artifacts/evaluation/
+          retention-days: 14
+          if-no-files-found: error
+      # TODO: opt-in S3 report writer under evaluation/<run_id>/.
+      # No schedule until cost controls, report retention, and alert ownership are approved.
