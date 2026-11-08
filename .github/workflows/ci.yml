@@ -1,0 +1,32 @@
+name: Offline CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: "0.10.12"
+          python-version: "3.12"
+      - run: uv sync --frozen --extra dev
+      - run: make lint test evaluate-local gate-demo
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: offline-evidence
+          path: artifacts/
+          retention-days: 14
+          if-no-files-found: error
+      # TODO: dependency/security scans, SBOM, signed builds, and coverage policy.

@@ -1,0 +1,24 @@
+name: Ephemeral teardown guard
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Ephemeral environment name (future implementation)
+        required: true
+      confirmation:
+        description: Typed environment name
+        required: true
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refuse teardown until ephemeral isolation is implemented
+        env:
+          ENVIRONMENT: ${{ inputs.environment }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          test "$ENVIRONMENT" = "$CONFIRMATION" || { echo "Confirmation mismatch"; exit 1; }
+          echo "No ephemeral stack is implemented. Dev/prod destruction is prohibited."
+          exit 1

@@ -1,0 +1,22 @@
+# TEMPLATE ONLY. Do not use for production approval without sample-size and risk review.
+gates:
+  - metric: contract_validity
+    minimum: 1.0
+    blocking: true
+    justification: Deterministic contract invariant.
+  - metric: allowed_label_rate
+    minimum: 1.0
+    blocking: true
+    justification: Deterministic allowlist invariant.
+  - metric: adversarial_safe_rate
+    minimum: 1.0
+    blocking: true
+    justification: Minimal synthetic safety fixture, not comprehensive red teaming.
+  - metric: api_error_rate
+    maximum: 0.0
+    blocking: true
+    justification: No deployment approval with observed API failures.
+  - metric: accuracy
+    minimum: 0.95
+    blocking: true
+    justification: Uncalibrated placeholder; requires owner approval and real evidence.

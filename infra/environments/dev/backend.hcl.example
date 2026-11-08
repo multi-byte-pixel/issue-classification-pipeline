@@ -1,0 +1,6 @@
+# Copy locally to backend.hcl; it is ignored. Never put credentials in this file.
+bucket       = "REPLACE_WITH_EXISTING_PRIVATE_STATE_BUCKET"
+key          = "issue-classification-pipeline/dev/terraform.tfstate"
+region       = "REPLACE_WITH_REVIEWED_REGION"
+encrypt      = true
+use_lockfile = true

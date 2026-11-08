@@ -1,0 +1,70 @@
+name: Reviewed dev plan or deploy
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        options: [plan, apply]
+        default: plan
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: issue-classifier-dev-infra
+  cancel-in-progress: false
+jobs:
+  dev:
+    if: github.ref == 'refs/heads/main' && vars.CLOUD_ENABLED == 'true'
+    environment: dev
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      STATE_BUCKET: ${{ vars.TF_STATE_BUCKET }}
+      TF_VARS: ${{ vars.DEV_TFVARS_JSON }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: "0.10.12"
+          python-version: "3.12"
+      - run: uv sync --frozen --extra dev
+      - run: make lint test package
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_version: "1.12.2"
+      - uses: aws-actions/configure-aws-credentials@ff717079ee2060e4bcee96c4779b553acc87447c # v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: pipeline-${{ github.run_id }}
+      - name: Initialize approved state backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$STATE_BUCKET" && test -n "$AWS_REGION" && test -n "$TF_VARS"
+          # No credentials or sensitive values belong in DEV_TFVARS_JSON.
+          printf '%s' "$TF_VARS" > infra/environments/dev/terraform.tfvars.json
+          terraform -chdir=infra/environments/dev init -lockfile=readonly \
+            -backend-config="bucket=$STATE_BUCKET" \
+            -backend-config="key=issue-classification-pipeline/dev/terraform.tfstate" \
+            -backend-config="region=$AWS_REGION" \
+            -backend-config="encrypt=true" -backend-config="use_lockfile=true"
+      - name: Create plan
+        run: terraform -chdir=infra/environments/dev plan -out=reviewed.tfplan
+      - name: Apply only on an explicitly approved apply invocation
+        if: inputs.action == 'apply'
+        run: terraform -chdir=infra/environments/dev apply reviewed.tfplan
+      - name: Authenticated health check
+        if: inputs.action == 'apply'
+        shell: bash
+        run: |
+          export API_URL="$(terraform -chdir=infra/environments/dev output -raw api_url)"
+          uv run python scripts/smoke.py
+      # Do not upload plan/state artifacts; they may contain sensitive infrastructure data.
+      # TODO: immutable plan promotion, rollback rehearsal, drift detection, and canary rollout.
