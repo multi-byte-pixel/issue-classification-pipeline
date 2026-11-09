@@ -2,8 +2,6 @@
 
 An AI quality engineering project that builds the delivery and evaluation pipeline first: GitHub Actions, Terraform, a small Bedrock-backed issue classifier, and deterministic synthetic evaluation with multi-turn scenarios. It runs fully offline with a fake provider; the AWS path is written and statically validated but has not been deployed.
 
-<!-- YOUR NOTES: why you built this and which quality-engineering problem it is meant to demonstrate. -->
-
 ## Start here
 
 This is a deliberately small first slice. Read [status and deferred work](docs/status.md) before interpreting any successful test or score.
@@ -75,8 +73,6 @@ Before setting `CLOUD_ENABLED=true`, follow the [bootstrap prerequisites](infra/
 
 Bedrock, IAM, and deployed-API behavior remain unverified until a real deployment has been exercised.
 
-<!-- YOUR NOTES: what you learned, what surprised you, and what you would test next with a real model. -->
-
 ## How this was built
 
-<!-- YOUR NOTES: describe your process honestly, for example which parts you designed, which parts an AI coding agent drafted, and how you reviewed and verified them. -->
+Developed with AI coding assistance. Verification scope and limitations are recorded in [docs/verification.md](docs/verification.md).
