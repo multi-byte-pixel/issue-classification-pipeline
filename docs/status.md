@@ -1,6 +1,6 @@
-# Starter status and acceptance boundaries
+# Status and acceptance boundaries
 
-This first slice is implemented on a review branch. No AWS resources have been provisioned and no paid inference has been executed as part of creating it.
+This first slice is implemented and merged. No AWS resources have been provisioned and no paid inference has been executed as part of creating it.
 
 ## Implemented
 
@@ -14,7 +14,7 @@ This first slice is implemented on a review branch. No AWS resources have been p
 
 Local verification covers lint, formatting, strict type checks, unit/contract/evaluation tests, deliberate failing gates, deterministic generation, report parsing, reproducible Linux packaging, and Terraform validation without a backend. The live integration test is skipped by default.
 
-See the [local verification record](verification.md) for commands and observed scope. GitHub Actions check results belong to the starter PR and are the authoritative hosted-CI evidence; passing checks do not validate AWS IAM, model access, deployed latency, or classification generalization.
+See the [local verification record](verification.md) for commands and observed scope. GitHub Actions check results belong to the pull requests and are the authoritative hosted-CI evidence; passing checks do not validate AWS IAM, model access, deployed latency, or classification generalization.
 
 ## Deliberately deferred
 
@@ -36,4 +36,4 @@ See the [local verification record](verification.md) for commands and observed s
 | Coverage expansion | Typos, malformed-input generation, mutations, fixture files, richer taxonomies |
 | Operations | Drift detection, rollback, load tests, idempotency, security review |
 
-The original Phoenix prompt remains intact. This implementation makes deliberate smaller-slice choices instead of marking every requested TODO as complete.
+This implementation makes deliberate smaller-slice choices instead of claiming every planned item is complete.

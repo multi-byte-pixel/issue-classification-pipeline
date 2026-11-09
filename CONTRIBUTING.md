@@ -1,6 +1,6 @@
-# Contributor instructions
+# Contributing
 
-Read README.md and docs/status.md before making changes. Work on review branches and keep changes small; do not merge a PR without authorization.
+Read README.md and docs/status.md before making changes. Work on review branches and keep pull requests small.
 
 - Use synthetic data only. Never commit credentials, Terraform state, plan files, customer text, or generated reports.
 - Credential-free CI must remain runnable without AWS or model access.

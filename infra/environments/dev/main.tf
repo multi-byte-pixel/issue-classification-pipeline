@@ -16,7 +16,7 @@ provider "aws" {
       project             = "issue-classification-pipeline"
       environment         = "dev"
       owner               = var.owner
-      cost-center         = "learning"
+      cost-center         = "portfolio"
       managed-by          = "terraform"
       data-classification = "synthetic"
     }

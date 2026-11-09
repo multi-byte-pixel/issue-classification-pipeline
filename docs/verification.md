@@ -1,6 +1,6 @@
-# Starter verification record
+# Local verification record
 
-The following checks were run locally while preparing the starter PR on September 20, 2026, America/Indianapolis. They establish offline software and static configuration evidence, not cloud deployment evidence.
+The following checks were run locally while preparing the first pull request on September 20, 2026, America/Indianapolis. They establish offline software and static configuration evidence, not cloud deployment evidence.
 
 | Check | Observed result |
 |---|---|

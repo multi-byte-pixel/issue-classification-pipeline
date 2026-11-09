@@ -1,4 +1,4 @@
-# Starter threat model
+# Threat model
 
 This is a design-review aid, not a security attestation. Controls need validation in the selected account, model, region, and operational context.
 
