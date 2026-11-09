@@ -1,6 +1,6 @@
 # Bootstrap is a reviewed prerequisite, not an automatic admin grant
 
-This starter deliberately does not fabricate a universally safe deployment IAM policy. Before a dev plan or deployment, an account administrator must provision or select the following resources and review their policies.
+This project deliberately does not fabricate a universally safe deployment IAM policy. Before a dev plan or deployment, an account administrator must provision or select the following resources and review their policies.
 
 - **State backend:** a private, encrypted, versioned S3 bucket, TLS-only access, and a state key dedicated to this project. Configure S3 locking with the checked-in backend example; do not reuse dev application artifacts as state.
 - **GitHub OIDC:** use the existing account provider if present. Restrict audience to `sts.amazonaws.com` and subject to `repo:multi-byte-pixel/issue-classification-pipeline:environment:dev`; create separate deployment and evaluation roles.

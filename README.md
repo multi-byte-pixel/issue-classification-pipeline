@@ -1,12 +1,13 @@
 # Issue Classification Pipeline
 
-A pipeline-first AI quality engineering learning project: GitHub Actions, Terraform, a small Bedrock-backed classifier, and deterministic synthetic evaluation with multi-turn scenarios. This is a private starter project, not a production system or evidence of prior production ownership.
+An AI quality engineering project that builds the delivery and evaluation pipeline first: GitHub Actions, Terraform, a small Bedrock-backed issue classifier, and deterministic synthetic evaluation with multi-turn scenarios. It runs fully offline with a fake provider; the AWS path is written and statically validated but has not been deployed.
+
+<!-- YOUR NOTES: why you built this and which quality-engineering problem it is meant to demonstrate. -->
 
 ## Start here
 
-The first implementation is an executable learning slice, not every item in the original build prompt. Read [status and deferred work](docs/status.md) before interpreting any successful test or score.
+This is a deliberately small first slice. Read [status and deferred work](docs/status.md) before interpreting any successful test or score.
 
-- [Original prompt and notes in Phoenix Tracker](https://github.com/multi-byte-pixel/phoenix-tracker/blob/main/docs/interview-prep/ai-testing-poc/issue-classification-prompt.md): project scope and design rationale.
 - [Architecture](docs/architecture.md): control plane, data plane, trust boundaries, and flow.
 - [Evaluation methodology](docs/evaluation-methodology.md): denominators, paired contexts, and limitations.
 - [Operational runbook](docs/operational-runbook.md): prerequisites, approved cloud commands, costs, and teardown.
@@ -21,7 +22,6 @@ Use Python 3.12, `uv` 0.10.12, and GNU Make. Every command below is credential-f
 ```bash
 git clone https://github.com/multi-byte-pixel/issue-classification-pipeline.git
 cd issue-classification-pipeline
-git switch feat/pipeline-starter  # while the starter PR is awaiting review
 make setup
 make lint
 make test
@@ -50,7 +50,7 @@ flowchart TD
 
 ## Cloud execution is disabled by default
 
-Nothing in PR CI deploys infrastructure or calls Bedrock. No schedule, cloud role, repository secret, account configuration, production environment, or destructive workflow is enabled by this starter.
+Nothing in PR CI deploys infrastructure or calls Bedrock. No schedule, cloud role, repository secret, account configuration, production environment, or destructive workflow is enabled by default.
 
 Before setting `CLOUD_ENABLED=true`, follow the [bootstrap prerequisites](infra/environments/bootstrap/README.md), configure the protected `dev` environment, review account-specific IAM, approve costs, and review a dev plan. The runbook enumerates the required variables and remaining deployment validation.
 
@@ -67,6 +67,16 @@ Before setting `CLOUD_ENABLED=true`, follow the [bootstrap prerequisites](infra/
 | `tests/` | Offline software tests and explicitly skipped live test |
 | `scripts/` | Locked Linux Lambda packaging and signed health check |
 
-## Interview framing
+## What this demonstrates
 
-This project demonstrates how to separate system correctness from model behavior, start with delivery and test infrastructure, and preserve evidence without calling a synthetic result a production benchmark. Present any Bedrock, IAM, or deployed-API behavior as unverified until an approved real deployment has been exercised.
+- Separating system correctness (contracts, error handling, fail-closed gates) from model behavior
+- Building delivery and test infrastructure before the model integration
+- Reporting synthetic results as synthetic, with explicit denominators and limitations
+
+Bedrock, IAM, and deployed-API behavior remain unverified until a real deployment has been exercised.
+
+<!-- YOUR NOTES: what you learned, what surprised you, and what you would test next with a real model. -->
+
+## How this was built
+
+<!-- YOUR NOTES: describe your process honestly, for example which parts you designed, which parts an AI coding agent drafted, and how you reviewed and verified them. -->

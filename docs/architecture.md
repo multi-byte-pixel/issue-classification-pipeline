@@ -24,6 +24,6 @@ The API integration timeout is 30 seconds and Lambda is limited to 25 seconds. B
 
 ## Architecture reference
 
-Use the [AWS Generative AI Application Builder reference](https://docs.aws.amazon.com/solutions/latest/generative-ai-application-builder-on-aws/architecture-overview.html) as conceptual background, not equivalent controls or features. This starter omits RAG, dashboards, agents, MCP, and multi-agent orchestration.
+Use the [AWS Generative AI Application Builder reference](https://docs.aws.amazon.com/solutions/latest/generative-ai-application-builder-on-aws/architecture-overview.html) as conceptual background, not equivalent controls or features. This project omits RAG, dashboards, agents, MCP, and multi-agent orchestration.
 
 The provider interface accepts validated requests and returns untrusted text. Confidence is omitted rather than treated as a probability, and production semantic decisions remain out of scope.

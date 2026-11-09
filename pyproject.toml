@@ -1,7 +1,7 @@
 [project]
 name = "issue-classification-pipeline"
 version = "0.1.0"
-description = "Pipeline-first synthetic AI evaluation learning scaffold"
+description = "Pipeline-first synthetic AI evaluation for an issue classifier"
 requires-python = ">=3.12,<3.13"
 dependencies = ["pydantic>=2.10,<3", "boto3>=1.35,<2", "PyYAML>=6,<7"]
 
